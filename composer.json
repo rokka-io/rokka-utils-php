@@ -9,5 +9,13 @@
             "email": "rokka@rokka.io"
         }
     ],
-    "require": {}
+    "autoload": {
+        "psr-0": {
+            "Rokka\\Utils\\": "src/"
+        }
+    },
+    "require": {
+        "php": "~7.1",
+        "guzzlehttp/psr7": "^1.7"
+    }
 }
