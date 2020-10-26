@@ -92,7 +92,7 @@ class SignUrl
 
         $query = $url->getQuery();
         $urlPath = $url->getPath() . ($query ? '?'.$query : '');
-        dump($urlPath);
+
         if ('/' !== substr($urlPath, 0, 1)) {
             $urlPath = '/'.$urlPath;
         }
