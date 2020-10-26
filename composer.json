@@ -1,0 +1,13 @@
+{
+    "name": "rokka/utils",
+    "description": "Some utility methods for rokka to be shared among projects",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "rokka.io",
+            "email": "rokka@rokka.io"
+        }
+    ],
+    "require": {}
+}
