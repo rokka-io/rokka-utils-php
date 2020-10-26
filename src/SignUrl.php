@@ -3,11 +3,11 @@
 
 namespace Rokka\Utils;
 
-
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 
-class SignUrl {
+class SignUrl
+{
     /**
      * Signs a Rokka URL with an option valid until date.
      *
