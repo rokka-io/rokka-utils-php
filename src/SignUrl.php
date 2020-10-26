@@ -56,42 +56,48 @@ class SignUrl
             $url = new Uri($url);
         }
 
+        $sigOptsBase64 = null;
         if (null !== $options) {
-            $json = json_encode(json_encode($options));
+            $json = json_encode($options);
             if (false !== $json) {
-                $options = base64_encode($json);
+                $sigOptsBase64 = base64_encode($json);
             } else {
                 throw new \Exception('Could not encode options input');
             }
         }
-        $urlPath = $url->getPath();
-        // remove sig and sigopts values, if they exists for some reason
+
+        $signature = self::getSignature($url, $sigOptsBase64, $signKey);
+        if (null !== $sigOptsBase64) {
+            // append sigopts to return url
+            $url = Uri::withQueryValue($url, 'sigopts', urlencode($sigOptsBase64));
+        } else {
+            // else remove, if exists
+            $url = Uri::withoutQueryValue($url, 'sigopts');
+        }
+        return Uri::withQueryValue($url, 'sig', $signature);
+    }
+
+    /**
+     * @param \Psr\Http\Message\UriInterface $url
+     * @param string|null $optionsBase64
+     * @param string $signKey
+     *
+     * @return string
+     */
+    public static function getSignature(UriInterface $url, string $optionsBase64 = null, string $signKey): string
+    {
+        // remove sig and sigopts, if they exist
         $url = Uri::withoutQueryValue($url, 'sig');
         $url = Uri::withoutQueryValue($url, 'sigopts');
-        $urlQuery = $url->getQuery();
-        // add query string
-        if ($urlQuery) {
-            $urlPath .= '?'.$urlQuery;
-        }
-        // if urlPath doesn't start with a /, add one to be sure it's there
+
+        $query = $url->getQuery();
+        $urlPath = $url->getPath() . ($query ? '?'.$query : '');
+        dump($urlPath);
         if ('/' !== substr($urlPath, 0, 1)) {
             $urlPath = '/'.$urlPath;
         }
 
-        if (null !== $options) {
-            $url = Uri::withQueryValue($url, 'sigopts', urlencode($options));
-        }
-        return Uri::withQueryValue($url, 'sig', self::getSignature($urlPath, $options, $signKey));
-    }
-
-    /**
-     * @param string $urlPath
-     * @param string|null $options
-     * @param string $signKey
-     */
-    public static function getSignature(string $urlPath, string $options = null, string $signKey): string
-    {
-        $sigString = $urlPath . ':' . ($options ?? '') . ':' . $signKey;
+        $sigString = $urlPath . ':' . ($optionsBase64 ?? '') . ':' . $signKey;
         return self::calculateSignature($sigString);
     }
 
