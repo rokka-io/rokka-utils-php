@@ -40,8 +40,6 @@ class SignUrl
     /**
      * Signs a rokka URL with a sign key and optional signature options.
      *
-     * @since 1.12.0
-     *
      * @param string|UriInterface $url
      * @param string              $signKey
      * @param array|null          $options
@@ -66,29 +64,29 @@ class SignUrl
             }
         }
 
-        $signature = self::getSignature($url, $sigOptsBase64, $signKey);
         if (null !== $sigOptsBase64) {
-            // append sigopts to return url
+            // append sigopts to url
             $url = Uri::withQueryValue($url, 'sigopts', urlencode($sigOptsBase64));
         } else {
             // else remove, if exists
             $url = Uri::withoutQueryValue($url, 'sigopts');
         }
+        $signature = self::getSignature($url, $signKey);
         return Uri::withQueryValue($url, 'sig', $signature);
     }
 
     /**
+     * Gets signature for an Uri
+     *
      * @param \Psr\Http\Message\UriInterface $url
-     * @param string|null $optionsBase64
      * @param string $signKey
      *
      * @return string
      */
-    public static function getSignature(UriInterface $url, string $optionsBase64 = null, string $signKey): string
+    public static function getSignature(UriInterface $url, string $signKey): string
     {
-        // remove sig and sigopts, if they exist
+        // remove sig  if it exists
         $url = Uri::withoutQueryValue($url, 'sig');
-        $url = Uri::withoutQueryValue($url, 'sigopts');
 
         $query = $url->getQuery();
         $urlPath = $url->getPath() . ($query ? '?'.$query : '');
@@ -97,7 +95,7 @@ class SignUrl
             $urlPath = '/'.$urlPath;
         }
 
-        $sigString = $urlPath . ':' . ($optionsBase64 ?? '') . ':' . $signKey;
+        $sigString = $urlPath . ':' . $signKey;
         return self::calculateSignature($sigString);
     }
 

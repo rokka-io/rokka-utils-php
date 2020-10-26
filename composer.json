@@ -16,6 +16,7 @@
     },
     "require": {
         "php": "~7.0",
+        "ext-json": "*",
         "guzzlehttp/psr7": "^1.7"
     }
 }
