@@ -21,7 +21,7 @@ class SignUrl
      *
      * @throws \Exception
      *
-     * @return string
+     * @return UriInterface
      */
     public static function signUrl($url, $signKey, $until = null, $roundDateUpTo = 300)
     {
@@ -77,12 +77,31 @@ class SignUrl
         if ('/' !== substr($urlPath, 0, 1)) {
             $urlPath = '/'.$urlPath;
         }
-        $sigString = $urlPath.':'.($options ?? '').':'.$signKey;
 
         if (null !== $options) {
             $url = Uri::withQueryValue($url, 'sigopts', urlencode($options));
         }
+        return Uri::withQueryValue($url, 'sig', self::getSignature($urlPath, $options, $signKey));
+    }
 
-        return Uri::withQueryValue($url, 'sig', urlencode(substr(hash('sha256', $sigString), 0, 16)));
+    /**
+     * @param string $urlPath
+     * @param string|null $options
+     * @param string $signKey
+     */
+    public static function getSignature(string $urlPath, string $options = null, string $signKey): string
+    {
+        $sigString = $urlPath . ':' . ($options ?? '') . ':' . $signKey;
+        return self::calculateSignature($sigString);
+    }
+
+    /**
+     * @param string $sigString
+     *
+     * @return string
+     */
+    private static function calculateSignature(string $sigString): string
+    {
+        return urlencode(substr(hash('sha256', $sigString), 0, 16));
     }
 }
