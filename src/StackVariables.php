@@ -7,6 +7,6 @@ class StackVariables
 {
     public static function hasSpecialChars(string $value): bool
     {
-        return  (preg_match('#[$/\-\#%&?]#', $value) > 0);
+        return  (preg_match('#[$/\-\#%&?;\\\]#', $value) > 0);
     }
 }
