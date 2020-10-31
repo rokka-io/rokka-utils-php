@@ -54,19 +54,16 @@ class SignUrl
             $url = new Uri($url);
         }
 
-        $sigOptsBase64 = null;
         if (null !== $options) {
-            $json = json_encode($options);
-            if (false !== $json) {
-                $sigOptsBase64 = base64_encode($json);
-            } else {
+            $sigOptsJson = json_encode($options);
+            if (false === $sigOptsJson) {
                 throw new \Exception('Could not encode options input');
             }
         }
 
-        if (null !== $sigOptsBase64) {
+        if (null !== $sigOptsJson) {
             // append sigopts to url
-            $url = Uri::withQueryValue($url, 'sigopts', urlencode($sigOptsBase64));
+            $url = Uri::withQueryValue($url, 'sigopts', urlencode($sigOptsJson));
         } else {
             // else remove, if exists
             $url = Uri::withoutQueryValue($url, 'sigopts');
