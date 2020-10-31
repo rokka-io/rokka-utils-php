@@ -54,6 +54,7 @@ class SignUrl
             $url = new Uri($url);
         }
 
+        $sigOptsJson = null;
         if (null !== $options) {
             $sigOptsJson = json_encode($options);
             if (false === $sigOptsJson) {
