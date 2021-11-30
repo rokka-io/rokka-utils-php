@@ -6,6 +6,10 @@ This project tries to follow [Semantic Versioning](http://semver.org/) since the
 
 This document mainly describes API changes important to users of this library.
 
+## 1.0.2  - 2021-11-29
+
+* Add support for version 2.1 of `guzzlehttp/psr7`
+
 ## 1.0.1 - 2020-11-14
 
 * Add PHP 8.0 support to composer.json
