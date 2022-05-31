@@ -6,6 +6,10 @@ This project tries to follow [Semantic Versioning](http://semver.org/) since the
 
 This document mainly describes API changes important to users of this library.
 
+## 1.0.3  - 2022-05-31
+
+* Set timezone in SignURL to UTC for consistency
+
 ## 1.0.2  - 2021-11-29
 
 * Add support for version 2.1 of `guzzlehttp/psr7`

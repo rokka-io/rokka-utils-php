@@ -29,7 +29,7 @@ class SignUrl
 
         if (null !== $until) {
             if ($roundDateUpTo > 1) {
-                $until = (new \DateTime())->setTimestamp((int) ceil($until->getTimestamp() / $roundDateUpTo) * $roundDateUpTo);
+                $until = (new \DateTime())->setTimestamp((int) ceil($until->getTimestamp() / $roundDateUpTo) * $roundDateUpTo)->setTimezone(new \DateTimeZone("UTC"));
             }
             $options = ['until' => $until->format('c')];
         }
